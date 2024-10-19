@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CVH Assessment</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .result {
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        .suggestions {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .alert {
+            color: red;
+            font-weight: bold;
+        }
+        .graphs {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .graph {
+            flex: 1 1 45%;
+            margin: 10px;
+        }
+        .correlation-graph {
+            width: 100%;
+            margin-top: 20px;
+        }
+        .graph img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Cardiovascular Health (CVH) Assessment</h1>
+
+        <!-- Input Form -->
+        <form method="POST">
+            <div class="form-group">
+                <label for="age">Age:</label>
+                <input type="number" id="age" name="age" required>
+            </div>
+            <div class="form-group">
+                <label for="bmi">BMI:</label>
+                <input type="number" step="any" id="bmi" name="bmi" required>
+            </div>
+            <div class="form-group">
+                <label for="smoking">Smoking Status:</label>
+                <select id="smoking" name="smoking" required>
+                    <option value="0">Non-smoker</option>
+                    <option value="1">Smoker</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="physical_activity">Physical Activity Level:</label>
+                <select id="physical_activity" name="physical_activity" required>
+                    <option value="0">None</option>
+                    <option value="1">Moderate</option>
+                    <option value="2">High</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="blood_pressure">Blood Pressure Status:</label>
+                <select id="blood_pressure" name="blood_pressure" required>
+                    <option value="0">Normal</option>
+                    <option value="1">High</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="cholesterol">Cholesterol Status:</label>
+                <select id="cholesterol" name="cholesterol" required>
+                    <option value="0">Normal</option>
+                    <option value="1">High</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="glucose">Fasting Blood Sugar Status:</label>
+                <select id="glucose" name="glucose" required>
+                    <option value="0">Normal</option>
+                    <option value="1">High</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+
+        <div class="result">
+            <p>Your CVH Category: <span class="alert" style="color: {% if result == 'Poor' %} red {% elif result == 'Intermediate' %} orange {% else %} green {% endif %}">{{ result }}</span></p>
+        </div>
+
+        {% if suggestions %}
+            <div class="suggestions">
+                <p><strong>Suggestions for Improvement:</strong></p>
+                <p>{{ suggestions }}</p>
+            </div>
+        {% endif %}
+
+        <div class="graphs">
+            <div class="graph">
+                <h3>Correlation between CVH Category and Healthcare Cost</h3>
+                <img src="data:image/png;base64,{{ correlation_graph }}" alt="Correlation Graph">
+            </div>
+            <div class="graph">
+                <h3>BMI Comparison</h3>
+                <img src="data:image/png;base64,{{ bar_graph_cvh }}" alt="BMI Comparison">
+            </div>
+        </div>
+
+        <div class="graphs">
+            <div class="graph">
+                <h3>Healthcare Costs by CVH Category</h3>
+                <img src="data:image/png;base64,{{ box_graph_healthcare }}" alt="Healthcare Cost by CVH">
+            </div>
+            <div class="graph">
+                <h3>Average Healthcare Costs by CVH Category</h3>
+                <img src="data:image/png;base64,{{ linear_healthcare_cost_plot }}" alt="Average Healthcare Costs">
+            </div>
+        </div>
+
+        <div>
+            <p>Calculated Correlation Coefficient: {{ correlation }}</p>
+            <p>
+                {% if correlation is not none %}
+                    The correlation between CVH category and healthcare cost is {{ correlation|round(2) }}.
+                {% else %}
+                    No correlation data available yet.
+                {% endif %}
+            </p>
+            
+            
+        </div>
+    </div>
+
+</body>
+</html>
